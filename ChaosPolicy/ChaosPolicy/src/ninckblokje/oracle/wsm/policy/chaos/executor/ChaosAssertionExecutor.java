@@ -58,10 +58,13 @@ public class ChaosAssertionExecutor extends AssertionExecutor {
         
         if (induceChaos(change)) {
             String randomMessage = UUID.randomUUID().toString();
+            logger.log(Level.INFO, "Inducing chaos");
+            logger.log(Level.WARNING, randomMessage);
             
             result.setStatus(IResult.FAILED);
             result.setFault(new WSMException(randomMessage));
         } else {
+            logger.log(Level.FINE, "No chaos this time");
             result.setStatus(IResult.SUCCEEDED);
         }
         
