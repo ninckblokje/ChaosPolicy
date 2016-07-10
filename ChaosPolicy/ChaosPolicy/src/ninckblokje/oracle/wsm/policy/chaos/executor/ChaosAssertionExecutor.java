@@ -74,7 +74,7 @@ public class ChaosAssertionExecutor extends AssertionExecutor {
     @Override
     public void init(IAssertion iAssertion, IExecutionContext iExecutionContext,
                      IContext iContext) throws WSMException {
-        // nothing todo
+        this.assertion = iAssertion;
     }
 
     @Override

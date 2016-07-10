@@ -1,4 +1,5 @@
 .data
 classes
 deploy
+SCA-INF
 *.lck

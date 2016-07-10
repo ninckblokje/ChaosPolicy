@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+     name="EchoService"
+     targetNamespace="http://oracle.com/sca/soapservice/ChaosPolicyServices/EchoService/EchoService"
+     xmlns:tns="http://oracle.com/sca/soapservice/ChaosPolicyServices/EchoService/EchoService"
+     xmlns:inp1="http://xmlns.oracle.com/singleString"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    >
+    <wsdl:documentation>
+        <abstractWSDL>http://localhost:7101/soa-infra/services/default/EchoService!1.0/WSDLs/EchoService.wsdl</abstractWSDL>
+    </wsdl:documentation>
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://xmlns.oracle.com/singleString" schemaLocation="../Schemas/singleString.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="requestMessage">
+        <wsdl:part name="part1" element="inp1:singleString"/>
+    </wsdl:message>
+    <wsdl:message name="replyMessage">
+        <wsdl:part name="part1" element="inp1:singleString"/>
+    </wsdl:message>
+    <wsdl:portType name="execute_ptt">
+        <wsdl:operation name="execute">
+            <wsdl:input message="tns:requestMessage"/>
+            <wsdl:output message="tns:replyMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="execute_pttBinding" type="tns:execute_ptt">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="execute">
+            <soap:operation style="document" soapAction="execute"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="EchoService">
+        <wsdl:port name="execute_pt" binding="tns:execute_pttBinding">
+            <soap:address location="https://DESKTOP-T7VHRK1:7102/soa-infra/services/default/EchoService!1.0*soa_997fd0ad-3705-4398-b013-12a7bbb2f092/EchoService"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

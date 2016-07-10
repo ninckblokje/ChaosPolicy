@@ -25,17 +25,19 @@
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <wsp:Policy xmlns="http://schemas.xmlsoap.org/ws/2004/09/policy"
-            xmlns:orasp="http://schemas.oracle.com/ws/2006/01/securitypolicy"
             xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:orawsp="http://schemas.oracle.com/ws/2006/01/policy"
             xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+            xmlns:custom="ninckblokje/chaos_policy"
             orawsp:attachTo="binding.any"
             orawsp:category="management"
+            orawsp:displayName="Chaos Policy"
+            orawsp:local-optimization="off"
             orawsp:status="enabled"
             wsu:Id="chaos_policy"
             wsp:Name="ninckblokje/chaos_policy">
-    <orasp:ipAssertion
+    <custom:chaosAssertion
                 orawsp:category="management/custom"
                 orawsp:Enforced="true"
                 orawsp:name="chaos_policy"
@@ -54,5 +56,5 @@
                 </orawsp:PropertySet>
             </orawsp:Config>
         </orawsp:bindings>
-    </orasp:ipAssertion>
+    </custom:chaosAssertion>
 </wsp:Policy>

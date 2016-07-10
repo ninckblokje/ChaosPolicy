@@ -1,0 +1,87 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Sun Jul 10 13:40:00 CEST 2016
+  Author:  ninckblokje
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="ChaosPolicyProcess"
+               targetNamespace="http://xmlns.oracle.com/ChaosPolicyServices/ChaosPolicyService/ChaosPolicyProcess"
+               xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+               xmlns:client="http://xmlns.oracle.com/ChaosPolicyServices/ChaosPolicyService/ChaosPolicyProcess"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+               xmlns:ns1="http://oracle.com/sca/soapservice/ChaosPolicyServices/ChaosPolicyService/ChaosPolicyService"
+               xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ui="http://xmlns.oracle.com/soa/designer"
+         xmlns:ns2="http://oracle.com/sca/soapservice/ChaosPolicyServices/EchoService/EchoService"
+         xmlns:ns3="http://xmlns.oracle.com/singleString">
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      PARTNERLINKS                                                      
+      List of services participating in this BPEL process               
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <import namespace="http://oracle.com/sca/soapservice/ChaosPolicyServices/ChaosPolicyService/ChaosPolicyService"
+          location="../WSDLs/ChaosPolicyServiceWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"
+          ui:processWSDL="true"/>
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="chaospolicyprocess_client" partnerLinkType="ns1:ChaosPolicyProcess" myRole="execute_ptt"/>
+    <partnerLink name="EchoService" partnerLinkType="ns2:EchoService" partnerRole="execute_ptt"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="ns1:requestMessage"/>
+
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="outputVariable" messageType="ns1:replyMessage"/>
+    <variable name="InvokeEchoService_execute_InputVariable" messageType="ns2:requestMessage"/>
+    <variable name="InvokeEchoService_execute_OutputVariable" messageType="ns2:replyMessage"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in ChaosPolicyProcess.wsdl) -->
+    <receive name="receiveInput" partnerLink="chaospolicyprocess_client" portType="ns1:execute_ptt" operation="execute" variable="inputVariable" createInstance="yes"/>
+    <assign name="Assign1">
+      <copy>
+        <from>$inputVariable.part1</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeEchoService_execute_InputVariable.part1</to>
+      </copy>
+    </assign>
+    <invoke name="InvokeEchoService" bpelx:invokeAsDetail="no" partnerLink="EchoService" portType="ns2:execute_ptt"
+            operation="execute" inputVariable="InvokeEchoService_execute_InputVariable"
+            outputVariable="InvokeEchoService_execute_OutputVariable"/>
+    <assign name="Assign2">
+      <copy>
+        <from>$InvokeEchoService_execute_OutputVariable.part1</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.part1</to>
+      </copy>
+    </assign>
+    <!-- Generate reply to synchronous request -->
+    <reply name="replyOutput" partnerLink="chaospolicyprocess_client" portType="ns1:execute_ptt" operation="execute" variable="outputVariable"/>
+  </sequence>
+</process>
