@@ -33,6 +33,7 @@ import java.util.logging.Level;
 
 import oracle.adf.share.logging.ADFLogger;
 
+import oracle.wsm.common.exception.BaseException;
 import oracle.wsm.common.sdk.IContext;
 import oracle.wsm.common.sdk.IResult;
 import oracle.wsm.common.sdk.Result;
@@ -52,6 +53,7 @@ public class ChaosAssertionExecutor extends AssertionExecutor {
     @Override
     public IResult execute(IContext iContext) throws WSMException {
         IResult result = new Result();
+        BaseException be;
         
         IAssertionBindings bindings = ((SimpleAssertion)(this.assertion)).getBindings();
         int change = getChange(bindings);
@@ -62,7 +64,7 @@ public class ChaosAssertionExecutor extends AssertionExecutor {
             logger.log(Level.WARNING, randomMessage);
             
             result.setStatus(IResult.FAILED);
-            result.setFault(new WSMException(randomMessage));
+            result.setFault(new WSMException(new Exception(randomMessage)));
         } else {
             logger.log(Level.FINE, "No chaos this time");
             result.setStatus(IResult.SUCCEEDED);
