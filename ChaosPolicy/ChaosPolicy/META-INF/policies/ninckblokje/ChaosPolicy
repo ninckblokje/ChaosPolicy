@@ -30,7 +30,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:orawsp="http://schemas.oracle.com/ws/2006/01/policy"
             xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
-            orawsp:attachTo="binding.server"
+            orawsp:attachTo="binding.any"
             orawsp:category="management"
             orawsp:status="enabled"
             wsu:Id="chaos_policy"
@@ -46,7 +46,7 @@
                     orawsp:name="chaos_policy">
                 <orawsp:PropertySet orawsp:name="chaos_policy_config">
                     <orawsp:Property
-                            orawsp:contentType="constant"
+                            orawsp:contentType="required"
                             orawsp:name="CHAOS_POLICY_CHANGE"
                             orawsp:type="string">
                         <orawsp:Value>8</orawsp:Value>
